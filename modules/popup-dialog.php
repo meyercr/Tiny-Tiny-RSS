@@ -737,11 +737,37 @@
 			print "</div>";
 
 			print "]]></content>";
-
-			//return;
 		}
+        if ($id == 'printTagSelect') {
+            print "<title>" . __('Select item(s) by tags') . "</title>";
+            print "<content><![CDATA[";
 
-		if ($id == "emailArticle") {
+            print "<table border=\"0\" width=\"80%\" align=\"center\"><tbody><tr><td rowspan=\"2\" align=\"center\">";
+            print "<select id=\"all_tags\" name=\"all_tags\" title=\"" . __('Which Tags?') . "\" multiple=\"multiple\" size=\"10\">";
+            $tmp = $_SESSION["uid"];
+            $result = db_query($link, "SELECT DISTINCT tag_name FROM ttrss_tags WHERE owner_uid = $tmp ORDER BY tag_name ASC");
+            error_log("Num Rows: " . db_num_rows($result) . ", Owner_uid: " . $tmp);
+            while ($row = db_fetch_assoc($result)) {
+                $tmp = htmlspecialchars($row["tag_name"]);
+                print "<option value=\"" . str_replace(" ", "%20", $tmp) . "\">$tmp</option>";
+            }
+            print "</select></td><td valign=\"middle\" align=\"left\">";
+
+            print "Select mode:<br/>Match: &nbsp;" .
+                  "<input class=\"noborder\" dojoType=\"dijit.form.RadioButton\" type=\"radio\" checked value=\"any\" name=\"tag_mode\">&nbsp;Any&nbsp;";
+            print "<input class=\"noborder\" dojoType=\"dijit.form.RadioButton\" type=\"radio\" value=\"all\" name=\"tag_mode\">&nbsp;All&nbsp;";
+            print "&nbsp;tags.<br/>" . "<button dojoType=\"dijit.form.Button\" onclick=\"viewfeed(get_all_tags(document.getElementById('all_tags')),
+		    	  get_radio_checked(document.getElementsByName('tag_mode')));\">" . __('Display entries') . "</button>";
+            print "</td></tr><td align=\"center\"><div align=\"center\">";
+            print "<button dojoType=\"dijit.form.Button\"
+			onclick=\"return closeInfoBox()\">" .
+                  __('Close this window') . "</button>";
+            print "</div></td></tr></tbody></table>";
+            print "]]></content>";
+            //return;
+        }
+
+        if ($id == "emailArticle") {
 
 			$secretkey = sha1(uniqid(rand(), true));
 

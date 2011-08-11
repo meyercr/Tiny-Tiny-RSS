@@ -131,4 +131,8 @@ function db_last_error($link) {
 	}
 }
 
+function db_quote($str){
+    return("'$str'");
+}
+
 ?>
